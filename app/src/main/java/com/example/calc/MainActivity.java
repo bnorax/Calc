@@ -1,18 +1,14 @@
 package com.example.calc;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ComponentActivity;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.method.MovementMethod;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import org.mariuszgromada.math.mxparser.Expression;
@@ -33,7 +29,8 @@ public class MainActivity extends AppCompatActivity {
             });
         }
     };
-    TextWatcher textW = new TextWatcher() {
+
+    TextWatcher tw = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -41,12 +38,12 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-           mHandler.removeCallbacks(runText);
+            mHandler.removeCallbacks(runText);
         }
 
         @Override
         public void afterTextChanged(Editable s) {
-           mHandler.postDelayed(runText, 3000);
+
         }
     };
 
@@ -64,11 +61,61 @@ public class MainActivity extends AppCompatActivity {
         Button butPlus = findViewById(R.id.buttonplus);
         Button butMinus = findViewById(R.id.buttonminus);
         Button butEquals = findViewById(R.id.buttonequals);
+        Button butMult = findViewById(R.id.buttonMultiply);
+        Button butDiv = findViewById(R.id.buttonDivide);
+        Button butComma = findViewById(R.id.buttonComma);
+
+        Button butOB = findViewById(R.id.buttonOB);
+        Button butCB = findViewById(R.id.buttonCB);
+        Button butSin = findViewById(R.id.buttonSin);
+        Button butCos = findViewById(R.id.buttonCos);
+        Button butC = findViewById(R.id.buttonC);
 
         txt = findViewById(R.id.editTextNumber);
-       // txt.addTextChangedListener(textW);
+        txt.addTextChangedListener(tw);
+
         txt.setMovementMethod(new ScrollingMovementMethod());
         txt.setHorizontallyScrolling(true);
+
+        butOB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resStr = resStr.concat("(");
+                txt.setText(resStr);
+            }
+        });
+
+        butCB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resStr = resStr.concat(")");
+                txt.setText(resStr);
+            }
+        });
+
+        butC.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                if(!resStr.isEmpty()) {
+                    resStr = resStr.substring(0, resStr.length() - 1);
+                    txt.setText(resStr);
+                }
+            }
+        });
+        butC.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                resStr = "";
+                txt.setText(resStr);
+                return true;
+            }
+        });
+
+        but1.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                resStr = resStr.concat("1");
+                txt.setText(resStr);
+            }
+        });
 
         but1.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
@@ -148,8 +195,60 @@ public class MainActivity extends AppCompatActivity {
                 txt.setText(resStr);
             }
         });
+        butDiv.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                if(resStr.endsWith("/")){
+                    return;
+                }
+                resStr = resStr.concat("/");
+                txt.setText(resStr);
+            }
+        });
+        butComma.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                if(resStr.endsWith("+")){
+                    return;
+                }
+                resStr = resStr.concat("+");
+                txt.setText(resStr);
+            }
+        });
+        butMult.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                if(resStr.endsWith("*")){
+                    return;
+                }
+                resStr = resStr.concat("*");
+                txt.setText(resStr);
+            }
+        });
+        butSin.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                /*if(resStr.endsWith("+")){
+                    return;
+                }*/
+                resStr = resStr.concat("sin(");
+                txt.setText(resStr);
+            }
+        });
+        butCos.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                /*if(resStr.endsWith("+")){
+                    return;
+                }*/
+                resStr = resStr.concat("cos(");
+                txt.setText(resStr);
+            }
+        });
         butEquals.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
+                int countOB = resStr.length() - resStr.replace("(", "").length(),
+                        countCB = resStr.length() - resStr.replace(")", "").length();
+                if(countCB<countOB){
+                    for(int i = 0; i< countOB-countCB; i++){
+                        resStr = resStr.concat(")");
+                    }
+                }
                 Expression exp = new Expression(resStr);
                 if(exp.checkSyntax()){
                     Double tmp;
