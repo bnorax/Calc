@@ -7,26 +7,24 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import org.mariuszgromada.math.mxparser.Expression;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+
+
 public class MainActivity extends AppCompatActivity {
+    DecimalFormat decimalFormat;
     String resStr = "";
-    Double tempRes;
     TextView txt;
     final Handler mHandler = new Handler();
     Runnable runText = new Runnable() {
         public void run() {
             resStr = "";
-            MainActivity.this.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    txt.setText("");
-                }
-            });
+            MainActivity.this.runOnUiThread(() -> txt.setText(""));
         }
     };
 
@@ -46,6 +44,33 @@ public class MainActivity extends AppCompatActivity {
 
         }
     };
+
+    boolean checkOps(){
+        if(resStr.length()<1){
+            return true;
+        }
+        if(resStr.endsWith(".")){
+            resStr = resStr.substring(0, resStr.length()-1);
+            txt.setText(resStr);
+        }
+        if(resStr.endsWith("-")){
+            resStr = resStr.substring(0, resStr.length()-1);
+            txt.setText(resStr);
+        }
+        if(resStr.endsWith("/")){
+            resStr = resStr.substring(0, resStr.length()-1);
+            txt.setText(resStr);
+        }
+        if(resStr.endsWith("*")){
+            resStr = resStr.substring(0, resStr.length()-1);
+            txt.setText(resStr);
+        }
+        if(resStr.endsWith("+")){
+            resStr = resStr.substring(0, resStr.length()-1);
+            txt.setText(resStr);
+        }
+        return true;
+    }
 
     void SetCalcButtonListeners(){
         Button but1 = findViewById(R.id.button1);
@@ -77,198 +102,157 @@ public class MainActivity extends AppCompatActivity {
         txt.setMovementMethod(new ScrollingMovementMethod());
         txt.setHorizontallyScrolling(true);
 
-        butOB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                resStr = resStr.concat("(");
-                txt.setText(resStr);
-            }
+        butOB.setOnClickListener(v -> {
+            resStr = resStr.concat("(");
+            txt.setText(resStr);
         });
-
-        butCB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                resStr = resStr.concat(")");
-                txt.setText(resStr);
-            }
+        butCB.setOnClickListener(v-> {
+            resStr = resStr.concat(")");
+            txt.setText(resStr);
         });
-
-        butC.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                if(!resStr.isEmpty()) {
-                    resStr = resStr.substring(0, resStr.length() - 1);
-                    txt.setText(resStr);
+        butC.setOnClickListener(v->{
+            if(!resStr.isEmpty()) resStr = resStr.substring(0, resStr.length() - 1);
+            txt.setText(resStr);
+        });
+        butC.setOnLongClickListener(v -> {
+            resStr = "";
+            txt.setText(resStr);
+            return true;
+        });
+        but1.setOnClickListener(v -> {
+            resStr = resStr.concat("1");
+            txt.setText(resStr);
+        });
+        but1.setOnClickListener(v -> {
+            resStr = resStr.concat("1");
+            txt.setText(resStr);
+        });
+        but2.setOnClickListener(v -> {
+            resStr = resStr.concat("2");
+            txt.setText(resStr);
+        });
+        but3.setOnClickListener(v -> {
+            resStr = resStr.concat("3");
+            txt.setText(resStr);
+        });
+        but4.setOnClickListener(v -> {
+            resStr = resStr.concat("4");
+            txt.setText(resStr);
+        });
+        but5.setOnClickListener(v -> {
+            resStr = resStr.concat("5");
+            txt.setText(resStr);
+        });
+        but6.setOnClickListener(v -> {
+            resStr = resStr.concat("6");
+            txt.setText(resStr);
+        });
+        but7.setOnClickListener(v -> {
+            resStr = resStr.concat("7");
+            txt.setText(resStr);
+        });
+        but8.setOnClickListener(v -> {
+            resStr = resStr.concat("8");
+            txt.setText(resStr);
+        });
+        but9.setOnClickListener(v -> {
+            resStr = resStr.concat("9");
+            txt.setText(resStr);
+        });
+        but0.setOnClickListener(v -> {
+            resStr = resStr.concat("0");
+            txt.setText(resStr);
+        });
+        butMinus.setOnClickListener(v -> {
+            if(!checkOps()) {
+                return;
+            }
+            resStr = resStr.concat("-");
+            txt.setText(resStr);
+        });
+        butPlus.setOnClickListener(v -> {
+            if(!checkOps()) {
+                return;
+            }
+            resStr = resStr.concat("+");
+            txt.setText(resStr);
+        });
+        butDiv.setOnClickListener(v -> {
+            if(!checkOps()) {
+                return;
+            }
+            resStr = resStr.concat("/");
+            txt.setText(resStr);
+        });
+        butComma.setOnClickListener(v -> {
+            if(!checkOps()) {
+                return;
+            }
+            for(int i = resStr.length()-1; i >= 0; i--) {
+                char c = resStr.charAt(i);
+                switch (c) {
+                    case '+':
+                    case '-':
+                    case '*':
+                    case '/':
+                        resStr = resStr.concat(".");
+                        txt.setText(resStr);
+                    case '.':
+                        return;
                 }
             }
+            resStr = resStr.concat(".");
+            txt.setText(resStr);
         });
-        butC.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                resStr = "";
-                txt.setText(resStr);
-                return true;
+        butMult.setOnClickListener(v -> {
+            if(!checkOps()) {
+                return;
             }
+            resStr = resStr.concat("*");
+            txt.setText(resStr);
         });
-
-        but1.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                resStr = resStr.concat("1");
-                txt.setText(resStr);
-            }
+        butSin.setOnClickListener(v -> {
+            resStr = resStr.concat("sin(");
+            txt.setText(resStr);
         });
-
-        but1.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                resStr = resStr.concat("1");
-                txt.setText(resStr);
-            }
+        butCos.setOnClickListener(v -> {
+            resStr = resStr.concat("cos(");
+            txt.setText(resStr);
         });
-        but2.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                resStr = resStr.concat("2");
-                txt.setText(resStr);
-            }
-        });
-        but3.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                resStr = resStr.concat("3");
-                txt.setText(resStr);
-            }
-        });
-        but4.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                resStr = resStr.concat("4");
-                txt.setText(resStr);
-            }
-        });
-        but5.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                resStr = resStr.concat("5");
-                txt.setText(resStr);
-            }
-        });
-        but6.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                resStr = resStr.concat("6");
-                txt.setText(resStr);
-            }
-        });
-        but7.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                resStr = resStr.concat("7");
-                txt.setText(resStr);
-            }
-        });
-        but8.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                resStr = resStr.concat("8");
-                txt.setText(resStr);
-            }
-        });
-        but9.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                resStr = resStr.concat("9");
-                txt.setText(resStr);
-            }
-        });
-        but0.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                resStr = resStr.concat("0");
-                txt.setText(resStr);
-            }
-        });
-        butMinus.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                if(resStr.endsWith("-")){
-                    return;
+        butEquals.setOnClickListener(v -> {
+            int countOB = resStr.length() - resStr.replace("(", "").length(),
+                    countCB = resStr.length() - resStr.replace(")", "").length();
+            if(countCB<countOB){
+                for(int i = 0; i< countOB-countCB; i++){
+                    resStr = resStr.concat(")");
                 }
-                resStr = resStr.concat("-");
-                txt.setText(resStr);
             }
-        });
-        butPlus.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                if(resStr.endsWith("+")){
-                    return;
-                }
-                resStr = resStr.concat("+");
-                txt.setText(resStr);
-            }
-        });
-        butDiv.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                if(resStr.endsWith("/")){
-                    return;
-                }
-                resStr = resStr.concat("/");
-                txt.setText(resStr);
-            }
-        });
-        butComma.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                if(resStr.endsWith("+")){
-                    return;
-                }
-                resStr = resStr.concat("+");
-                txt.setText(resStr);
-            }
-        });
-        butMult.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                if(resStr.endsWith("*")){
-                    return;
-                }
-                resStr = resStr.concat("*");
-                txt.setText(resStr);
-            }
-        });
-        butSin.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                /*if(resStr.endsWith("+")){
-                    return;
-                }*/
-                resStr = resStr.concat("sin(");
-                txt.setText(resStr);
-            }
-        });
-        butCos.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                /*if(resStr.endsWith("+")){
-                    return;
-                }*/
-                resStr = resStr.concat("cos(");
-                txt.setText(resStr);
-            }
-        });
-        butEquals.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                int countOB = resStr.length() - resStr.replace("(", "").length(),
-                        countCB = resStr.length() - resStr.replace(")", "").length();
-                if(countCB<countOB){
-                    for(int i = 0; i< countOB-countCB; i++){
-                        resStr = resStr.concat(")");
-                    }
-                }
-                Expression exp = new Expression(resStr);
-                if(exp.checkSyntax()){
-                    Double tmp;
-                    tmp = exp.calculate();
-                    resStr = tmp.toString();
+            Expression exp = new Expression(resStr);
+            if(exp.checkSyntax()){
+                Double tmp = exp.calculate();
+                if(!tmp.isNaN()){
+                    resStr = decimalFormat.format(Double.valueOf(tmp));
                     txt.setText(resStr);
                     return;
                 }
-                txt.setText("Error");
-                resStr = "";
-                mHandler.postDelayed(runText, 2000);
             }
+            txt.setText("Error");
+            resStr = "";
+            mHandler.postDelayed(runText, 2000);
         });
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DecimalFormatSymbols dfs = DecimalFormatSymbols.getInstance();
+        dfs.setGroupingSeparator(',');
+        dfs.setDecimalSeparator('.');
+        decimalFormat = new DecimalFormat("0.#####");
+        decimalFormat.setDecimalFormatSymbols(dfs);
         setContentView(R.layout.activity_main);
         SetCalcButtonListeners();
+
     }
     @Override
     protected void onResume(){
