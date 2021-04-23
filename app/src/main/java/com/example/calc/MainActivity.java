@@ -8,6 +8,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.mariuszgromada.math.mxparser.Expression;
@@ -17,7 +19,7 @@ import java.text.DecimalFormatSymbols;
 
 
 public class MainActivity extends AppCompatActivity {
-    DecimalFormat decimalFormat;
+    DecimalFormat decimalFormat, decimalFormatLong;
     String resStr = "";
     TextView txt;
     final Handler mHandler = new Handler();
@@ -94,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         Button butCB = findViewById(R.id.buttonCB);
         Button butSin = findViewById(R.id.buttonSin);
         Button butCos = findViewById(R.id.buttonCos);
-        Button butC = findViewById(R.id.buttonC);
+        ImageView butC = findViewById(R.id.buttonC);
 
         txt = findViewById(R.id.editTextNumber);
         txt.addTextChangedListener(tw);
@@ -220,6 +222,9 @@ public class MainActivity extends AppCompatActivity {
             txt.setText(resStr);
         });
         butEquals.setOnClickListener(v -> {
+            if(resStr.isEmpty()){
+                return;
+            }
             int countOB = resStr.length() - resStr.replace("(", "").length(),
                     countCB = resStr.length() - resStr.replace(")", "").length();
             if(countCB<countOB){
@@ -231,7 +236,11 @@ public class MainActivity extends AppCompatActivity {
             if(exp.checkSyntax()){
                 Double tmp = exp.calculate();
                 if(!tmp.isNaN()){
-                    resStr = decimalFormat.format(Double.valueOf(tmp));
+                    if(tmp.toString().length()>16){
+                        resStr = decimalFormatLong.format(Double.valueOf(tmp));
+                    }else{
+                        resStr = decimalFormat.format(Double.valueOf(tmp));
+                    }
                     txt.setText(resStr);
                     return;
                 }
@@ -248,8 +257,12 @@ public class MainActivity extends AppCompatActivity {
         DecimalFormatSymbols dfs = DecimalFormatSymbols.getInstance();
         dfs.setGroupingSeparator(',');
         dfs.setDecimalSeparator('.');
-        decimalFormat = new DecimalFormat("0.#####");
+        decimalFormat = new DecimalFormat("0.########");
         decimalFormat.setDecimalFormatSymbols(dfs);
+        decimalFormat.setMaximumFractionDigits(100);
+        decimalFormatLong = new DecimalFormat("0.########E0");
+        decimalFormatLong.setDecimalFormatSymbols(dfs);
+        decimalFormatLong.setMaximumFractionDigits(100);
         setContentView(R.layout.activity_main);
         SetCalcButtonListeners();
 
