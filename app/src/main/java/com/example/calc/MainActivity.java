@@ -2,6 +2,7 @@ package com.example.calc;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -10,6 +11,8 @@ import android.text.method.ScrollingMovementMethod;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ScrollView;
+import android.widget.Scroller;
 import android.widget.TextView;
 
 import org.mariuszgromada.math.mxparser.Expression;
@@ -21,6 +24,7 @@ import java.text.DecimalFormatSymbols;
 public class MainActivity extends AppCompatActivity {
     DecimalFormat decimalFormat, decimalFormatLong;
     String resStr = "";
+    String memorySave = "";
     TextView txt;
     final Handler mHandler = new Handler();
     Runnable runText = new Runnable() {
@@ -92,19 +96,64 @@ public class MainActivity extends AppCompatActivity {
         Button butDiv = findViewById(R.id.buttonDivide);
         Button butComma = findViewById(R.id.buttonComma);
 
+        Button butMR = findViewById(R.id.buttonMR);
+        Button butMC = findViewById(R.id.buttonMC);
+        Button butMplus = findViewById(R.id.buttonMplus);
+        Button butMminus = findViewById(R.id.buttonMminus);
+        Button butMS = findViewById(R.id.buttonMS);
+
         Button butOB = findViewById(R.id.buttonOB);
         Button butCB = findViewById(R.id.buttonCB);
         Button butSin = findViewById(R.id.buttonSin);
         Button butCos = findViewById(R.id.buttonCos);
         ImageView butC = findViewById(R.id.buttonC);
+        ScrollView sv = findViewById(R.id.scroll);
 
         txt = findViewById(R.id.editTextNumber);
         txt.addTextChangedListener(tw);
 
-        txt.setMovementMethod(new ScrollingMovementMethod());
-        txt.setHorizontallyScrolling(true);
-
+        butMR.setOnClickListener(v->{
+            resStr = memorySave;
+            txt.setText(resStr);
+        });
+        butMS.setOnClickListener(v->{
+            butEquals.callOnClick();
+            memorySave = resStr;
+        });
+        butMC.setOnClickListener(v->{
+            memorySave = "0";
+        });
+        butMplus.setOnClickListener(v->{
+            butEquals.callOnClick();
+            resStr = resStr.concat("+");
+            resStr = resStr.concat(memorySave);
+            butEquals.callOnClick();
+            memorySave = resStr;
+        });
+        butMminus.setOnClickListener(v->{
+            butEquals.callOnClick();
+            String tempS = memorySave;
+            if(resStr.contains("-")) {
+                //tempS = tempS.substring(tempS.length()-1);
+                resStr = resStr.substring(1, resStr.length());
+                tempS = tempS.concat("+");
+            }else{
+                tempS = tempS.concat("-");
+            }
+            if(resStr.isEmpty()){
+                resStr = resStr.concat("0");
+            }
+            tempS = tempS.concat(resStr);
+            resStr = tempS;
+            butEquals.callOnClick();
+            memorySave = resStr;
+        });
         butOB.setOnClickListener(v -> {
+            if(!resStr.isEmpty()){
+                if(Character.isDigit(resStr.charAt(resStr.length()-1))){
+                    resStr = resStr.concat("*");
+                }
+            }
             resStr = resStr.concat("(");
             txt.setText(resStr);
         });
@@ -117,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
             txt.setText(resStr);
         });
         butC.setOnLongClickListener(v -> {
-            resStr = "";
+            resStr = "0";
             txt.setText(resStr);
             return true;
         });
@@ -173,6 +222,9 @@ public class MainActivity extends AppCompatActivity {
             txt.setText(resStr);
         });
         butPlus.setOnClickListener(v -> {
+            if(resStr.isEmpty()){
+                return;
+            }
             if(!checkOps()) {
                 return;
             }
@@ -180,6 +232,9 @@ public class MainActivity extends AppCompatActivity {
             txt.setText(resStr);
         });
         butDiv.setOnClickListener(v -> {
+            if(resStr.isEmpty()){
+                return;
+            }
             if(!checkOps()) {
                 return;
             }
@@ -207,6 +262,9 @@ public class MainActivity extends AppCompatActivity {
             txt.setText(resStr);
         });
         butMult.setOnClickListener(v -> {
+            if(resStr.isEmpty()){
+                return;
+            }
             if(!checkOps()) {
                 return;
             }
@@ -214,10 +272,20 @@ public class MainActivity extends AppCompatActivity {
             txt.setText(resStr);
         });
         butSin.setOnClickListener(v -> {
+            if(!resStr.isEmpty()){
+                if(Character.isDigit(resStr.charAt(resStr.length()-1))){
+                    resStr = resStr.concat("*");
+                }
+            }
             resStr = resStr.concat("sin(");
             txt.setText(resStr);
         });
         butCos.setOnClickListener(v -> {
+            if(!resStr.isEmpty()){
+                if(Character.isDigit(resStr.charAt(resStr.length()-1))){
+                    resStr = resStr.concat("*");
+                }
+            }
             resStr = resStr.concat("cos(");
             txt.setText(resStr);
         });
@@ -225,6 +293,10 @@ public class MainActivity extends AppCompatActivity {
             if(resStr.isEmpty()){
                 return;
             }
+            if(resStr.endsWith("0.")){
+                resStr = resStr.substring(0, resStr.length()-2);
+                resStr = resStr.concat("0");
+            };
             int countOB = resStr.length() - resStr.replace("(", "").length(),
                     countCB = resStr.length() - resStr.replace(")", "").length();
             if(countCB<countOB){
@@ -236,11 +308,7 @@ public class MainActivity extends AppCompatActivity {
             if(exp.checkSyntax()){
                 Double tmp = exp.calculate();
                 if(!tmp.isNaN()){
-                    if(tmp.toString().length()>16){
-                        resStr = decimalFormatLong.format(Double.valueOf(tmp));
-                    }else{
-                        resStr = decimalFormat.format(Double.valueOf(tmp));
-                    }
+                    resStr = decimalFormat.format(Double.valueOf(tmp));
                     txt.setText(resStr);
                     return;
                 }
@@ -254,6 +322,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+       // Intent loginIntent = new Intent(MainActivity.this, Login.class);
+        //startActivity(loginIntent);
         DecimalFormatSymbols dfs = DecimalFormatSymbols.getInstance();
         dfs.setGroupingSeparator(',');
         dfs.setDecimalSeparator('.');
