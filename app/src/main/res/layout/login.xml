@@ -42,6 +42,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Register" />
+
+        <TextView
+            android:id="@+id/logError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

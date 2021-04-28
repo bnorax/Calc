@@ -52,10 +52,9 @@
             android:layout_height="wrap_content"
             android:text="Register" />
 
-        <Button
-            android:id="@+id/regBack"
+        <TextView
+            android:id="@+id/regError"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Back" />
+            android:layout_height="wrap_content" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
