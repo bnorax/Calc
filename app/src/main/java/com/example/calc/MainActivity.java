@@ -107,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
         Button butSin = findViewById(R.id.buttonSin);
         Button butCos = findViewById(R.id.buttonCos);
         ImageView butC = findViewById(R.id.buttonC);
-        ScrollView sv = findViewById(R.id.scroll);
 
         txt = findViewById(R.id.editTextNumber);
         txt.addTextChangedListener(tw);
@@ -322,7 +321,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // Intent loginIntent = new Intent(MainActivity.this, Login.class);
+        //Intent loginIntent = new Intent(MainActivity.this, Login.class);
         //startActivity(loginIntent);
         DecimalFormatSymbols dfs = DecimalFormatSymbols.getInstance();
         dfs.setGroupingSeparator(',');
