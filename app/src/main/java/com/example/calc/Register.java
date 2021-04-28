@@ -44,7 +44,7 @@ public class Register extends AppCompatActivity {
                 regError.setText("All fields need to be filled");
                 return;
             }
-            if(regPass1.getText() != regPass2.getText()){
+            if(!regPass1.getText().toString().contentEquals(regPass2.getText())){
                 regError.setText("Passwords does not match");
                 CleanUpTextViews();
                 return;
@@ -71,6 +71,7 @@ public class Register extends AppCompatActivity {
             userRegAttempt.password = regPass1.getText().toString();
             userRegAttempt.email =  email;
             db.userDao().addUser(userRegAttempt);
+            regError.setText("Registration successful");
         });
     }
     @Override
