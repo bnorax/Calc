@@ -2,11 +2,10 @@ package com.example.calc;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
@@ -17,19 +16,21 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
-
-import org.w3c.dom.Text;
-
-import java.util.List;
 
 public class Login extends AppCompatActivity {
     private int RC_SIGN_IN = 0;
+    TextView error;
+    Database db;
     GoogleSignInClient mGoogleSignInClient;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
+        db = Room.databaseBuilder(getApplicationContext(),
+                Database.class, "d").allowMainThreadQueries().enableMultiInstanceInvalidation().build();
+        error = findViewById(R.id.logError);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -42,7 +43,7 @@ public class Login extends AppCompatActivity {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if(account != null){
             Intent startCalc = new Intent(Login.this, MainActivity.class);
-            startActivity(startCalc);
+            //startActivity(startCalc);
         }
     }
     @Override
@@ -52,16 +53,30 @@ public class Login extends AppCompatActivity {
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            GoogleSignInAccount acc = task.getResult();
+            //User attemptUser = new User();
+            if(acc == null){
+                return;
+            }
+            String emailS = acc.getEmail();
+            User getUser = db.userDao().getUserByEmail(emailS); //(emailS);
+            if(getUser == null){
+                error.setText("No such user, pls register first");
+                return;
+            }
+            Intent calc = new Intent(Login.this, MainActivity.class);
+            startActivity(calc);
         }
     }
+
 
     @Override
     protected void onResume() {
         super.onResume();
-        Database db = Room.databaseBuilder(getApplicationContext(),
-                Database.class, "db").allowMainThreadQueries().build();
+
         User userS = new User();
         userS.login = "123";
+        userS.email = " ";
         userS.password = "123";
         db.userDao().addUser(userS);
         ButtonsListener(db);
@@ -69,18 +84,13 @@ public class Login extends AppCompatActivity {
     void ButtonsListener(Database db){
         Button loginButton = findViewById(R.id.logLogButton);
         Button logRegButton = findViewById(R.id.logRegButton);
-        SignInButton googleButton = findViewById(R.id.googleButton);
+        SignInButton googleButton = findViewById(R.id.googleButtonReg);
         TextView login = findViewById(R.id.logLogin);
         TextView password = findViewById(R.id.logPass);
-        TextView error = findViewById(R.id.logError);
 
-        googleButton.setOnClickListener(v->{
-            switch (v.getId()) {
-                case R.id.googleButton:
-                    Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-                    startActivityForResult(signInIntent, RC_SIGN_IN);
-                    break;
-            }
+        googleButton.setOnClickListener(v-> {
+            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+            startActivityForResult(signInIntent, RC_SIGN_IN);
         });
 
         loginButton.setOnClickListener(v->{

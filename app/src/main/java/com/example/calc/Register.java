@@ -1,5 +1,6 @@
 package com.example.calc;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
@@ -9,31 +10,45 @@ import androidx.room.Room;
 
 import com.example.calc.data.Database;
 import com.example.calc.data.User;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.tasks.Task;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
 public class Register extends AppCompatActivity {
+    TextView regLogin;
+    TextView regPass1;
+    TextView regPass2;
+    TextView regEmail;
+    TextView regError;
+    Button regButton;
+    Database db;
+    int RC_SIGN_IN = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register);
-        Database db = Room.databaseBuilder(getApplicationContext(),
-                Database.class, "db").allowMainThreadQueries().build();
+        db = Room.databaseBuilder(getApplicationContext(),
+                Database.class, "d").allowMainThreadQueries().build();
         ButtonsListener(db);
     }
     void CleanUpTextViews(){
-        TextView regPass1 = findViewById(R.id.regPass1);
-        TextView regPass2 = findViewById(R.id.regPass2);
+        regPass1 = findViewById(R.id.regPass1);
+        regPass2 = findViewById(R.id.regPass2);
         regPass1.setText("");
         regPass2.setText("");
     }
     void ButtonsListener(Database db){
-        Button regButton = findViewById(R.id.regButton);
-        TextView regLogin = findViewById(R.id.regLogin);
-        TextView regEmail = findViewById(R.id.regEmail);
+        regButton = findViewById(R.id.regButton);
+        regLogin = findViewById(R.id.regLogin);
+        regEmail = findViewById(R.id.regEmail);
         TextView regPass1 = findViewById(R.id.regPass1);
         TextView regPass2 = findViewById(R.id.regPass2);
-        TextView regError = findViewById(R.id.regError);
+        regError = findViewById(R.id.regError);
+        SignInButton google = findViewById(R.id.googleButtonReg);
 
         regButton.setOnClickListener(v->{
             if(regLogin.getText().length()==0 ||

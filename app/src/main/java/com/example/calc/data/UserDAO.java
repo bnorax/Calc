@@ -22,9 +22,9 @@ public interface UserDAO {
     @Query("SELECT * FROM user_table WHERE uid IN (:userIds)")
     List<User> loadAllByIds(int[] userIds);
 
-    @Query("SELECT * FROM user_table WHERE login IN (:pLogin)")
+    @Query("SELECT * FROM user_table WHERE login = (:pLogin)")
     User getUserByLogin(String pLogin);
 
-    @Query("SELECT * FROM user_table WHERE email IN (:pEmail)")
+    @Query("SELECT * FROM user_table WHERE email = (:pEmail)")
     User getUserByEmail(String pEmail);
 }
