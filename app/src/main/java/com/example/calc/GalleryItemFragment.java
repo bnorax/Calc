@@ -1,9 +1,16 @@
 package com.example.calc;
 
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,6 +29,7 @@ public class GalleryItemFragment extends Fragment {
         ImageView image = view.findViewById(R.id.imageView);
         if(item.descRes != null){
             desc.setText(item.descRes);
+
         }
         if(item.headerRes != null){
             header.setText(item.headerRes);

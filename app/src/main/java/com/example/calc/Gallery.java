@@ -27,6 +27,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -55,7 +58,6 @@ public class Gallery extends Fragment{
        // SetData();
         View view = inflater.inflate(R.layout.fragment_gallery, container, false);
         FloatingActionButton button = view.findViewById(R.id.addButton);
-        String text;
         RecyclerView  recyclerView = view.findViewById(R.id.list);
         galleryAdapter = new GalleryAdapter(getContext(), galleryItems);
         button.setOnClickListener(v -> {
