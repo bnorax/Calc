@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddToList">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/headerAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginStart="10dp"
+            android:background="@android:color/transparent"
+            android:ems="10"
+            android:gravity="top"
+            android:hint="Header"
+            android:inputType="textPersonName"
+            android:maxWidth="200dp"
+            android:maxLength="20"
+            app:layout_constraintStart_toEndOf="@+id/imageViewAdd"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/descAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:background="@android:color/transparent"
+            android:ems="10"
+            android:gravity="start|top"
+            android:hint="Description"
+            android:inputType="textMultiLine|textPersonName"
+            android:maxWidth="200dp"
+            android:maxLength="200"
+            app:layout_constraintStart_toEndOf="@+id/imageViewAdd"
+            app:layout_constraintTop_toBottomOf="@+id/headerAdd" />
+
+        <ImageView
+            android:id="@+id/imageViewAdd"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:clickable="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/addPost"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="44dp"
+            android:layout_marginEnd="4dp"
+            android:text="Add"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/descAdd" />
+
+        <Button
+            android:id="@+id/musicAdd"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="Add music"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewAdd" />
+
+        <TextView
+            android:id="@+id/musicInfo"
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/musicAdd" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>
