@@ -45,20 +45,6 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         GalleryItem item = items.get(position);
-        web = holder.itemView.findViewById(R.id.webView);
-        client = new WebViewClient(){
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url != null && (url.startsWith("http://") || url.startsWith("https://"))) {
-                    web.loadUrl(url);
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        };
-        web.setWebViewClient(client);
-        web.getSettings().setJavaScriptEnabled(true);
         // web.loadUrl("https://www.google.com");
 
 
