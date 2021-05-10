@@ -85,5 +85,4 @@ public class AddToList extends Fragment {
         // Inflate the layout for this fragment
         return view;
     }
-
 }

@@ -39,15 +39,4 @@
         app:layout_constraintStart_toEndOf="@+id/imageView"
         app:layout_constraintTop_toBottomOf="@+id/header" />
 
-    <WebView
-        android:onClick="onUrlClick"
-        android:linksClickable="false"
-        android:clickable="true"
-        android:id="@+id/webView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

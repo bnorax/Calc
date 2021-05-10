@@ -12,19 +12,35 @@ public class GalleryItem implements Parcelable {
     String descRes;
     Uri musicRes;
     Uri imageRes;
-    GalleryItem(String header, String desc, Uri music, Uri image){
+    public GalleryItem(String header, String desc, Uri music, Uri image){
         this.headerRes = header;
         this.descRes = desc;
         this.musicRes = music;
         this.imageRes = image;
     }
-    GalleryItem(Uri image){
+    public GalleryItem(Uri image){
         this.imageRes = image;
         this.headerRes = "empty";
     }
-    GalleryItem(){
+    public GalleryItem(){
         this.imageRes = null;
         this.headerRes = "empty";
+    }
+
+    public String getDescRes() {
+        return descRes;
+    }
+
+    public Uri getImageRes() {
+        return imageRes;
+    }
+
+    public String getHeaderRes() {
+        return headerRes;
+    }
+
+    public Uri getMusicRes() {
+        return musicRes;
     }
 
     @Override
